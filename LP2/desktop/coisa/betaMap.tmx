@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="32" tileheight="32" nextobjectid="7">
+ <tileset firstgid="1" source="untitled.tsx"/>
+ <layer name="Camada de Tiles 1" width="128" height="128">
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6BqmX+RF3JIWDVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVXfP8S/gHk=
+  </data>
+ </layer>
+ <layer name="Camada de Tiles 2" width="128" height="128">
+  <data encoding="base64" compression="zlib">
+   eJzt3EENADAIADH8K5usGUDAlmsTFNyDBwkzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADUnWXo0L9N/zb92/QHgJ3d2KZ/m/5t+rfp36Z/m/4AAAAAAAAAAAAAAAD/8TelTf82/dv0b9O/TX8AAAAAAIAOd6E2/dv0b9O/TX8AAAB43wUScEsB
+  </data>
+ </layer>
+ <objectgroup name="Camada de Objetos 1">
+  <object id="3" x="128" y="2143" width="94" height="224"/>
+  <object id="4" x="1889" y="1889" width="156" height="157"/>
+  <object id="5" x="289" y="3136" width="156" height="191"/>
+  <object id="6" x="512" y="3710" width="125" height="160"/>
+ </objectgroup>
+</map>
