@@ -10,8 +10,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -51,10 +53,13 @@ public class PlayScreen implements Screen, InputProcessor {
 	public World mundo;
 	private Box2DDebugRenderer b2Render;
 	
-	public Nave1 jogador;
+	static public NavePlayer jogador;
+	static public NaveInimiga[] inimigo;
 	
 	private TextureAtlas atlas;
-
+	private TextureAtlas atlasInimigo;
+	
+	
 	public int mouseX;
 	public int mouseY;
 	
@@ -69,18 +74,29 @@ public class PlayScreen implements Screen, InputProcessor {
 		port = new FitViewport(ExGame.V_LARG / ExGame.PPM, ExGame.V_ALT / ExGame.PPM, camera);	
 		
 		carregaMapa = new TmxMapLoader();
-		mapa = carregaMapa.load("coisa/betaMap.tmx");
-		atlas = new TextureAtlas("coisa/Nave1.atlas");
+		mapa = carregaMapa.load("coisa/Mapa.tmx");
+		atlas = new TextureAtlas("coisa/NaveR.pack");
+		atlasInimigo = new TextureAtlas("coisa/NaveC.pack");
 		renderMapa = new OrthogonalTiledMapRenderer(mapa, 1 / ExGame.PPM);
 		camera.position.set(port.getWorldWidth() /2, port.getWorldHeight() /2, 0);
 		
 		mundo = new World(new Vector2(0, 0), true);
 		b2Render = new Box2DDebugRenderer();
+		inimigo = new NaveInimiga[20];
+		for(int i = 0; i < 20; i++){
+		inimigo[i] = new NaveInimiga(mundo, this, camera);
+		inimigo[i].outrometodo();
+		}
+		jogador = new NavePlayer(mundo, this, camera);
 		
-		jogador = new Nave1(mundo, this, camera);
+		
 		
 		new B2CriaMundo(mundo, mapa);
 		
+		//Pixmap pm = new Pixmap(Gdx.files.internal("coisa/cursor.png"));
+		
+		//Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth(), pm.getHeight()));
+		Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Crosshair);		
 		Gdx.input.setInputProcessor(this);
 		
 		
@@ -120,20 +136,10 @@ public class PlayScreen implements Screen, InputProcessor {
 			camera.zoom -= 0.02;			
 			//if(camera.zoom < 0.30000037)camera.zoom = (float) 0.30000037;
 		}
-		if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            jogador.fire();
-    	}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+				
 		
 	}
+	
 
 	public void update(float dt, float screenX, float screenY) {
 		handleInput(dt);
@@ -144,13 +150,21 @@ public class PlayScreen implements Screen, InputProcessor {
 		camera.position.y = jogador.corpo.getPosition().y;
 		
 		jogador.update(dt);
-		
+		for(int i = 0; i < 20; i++) {
+		inimigo[i].update(dt);
+		}		
 		camera.update();		
 		
 		
 		renderMapa.setView(camera);
 	}
 	
+	
+	public TextureAtlas getAtlasInimigo(){
+		return atlasInimigo;
+		
+		
+	}
 	
 	public TextureAtlas getAtlas(){
 		return atlas;
@@ -179,14 +193,12 @@ public class PlayScreen implements Screen, InputProcessor {
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		jogador.draw(game.balde);
-		
+		for(int i = 0; i < 20; i++) {
+		inimigo[i].draw(game.balde);
+		}
 		game.balde.end();
 		
-		
-		
-		
-		
-		
+			
 		
 			}
 
@@ -258,8 +270,11 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		jogador.fire();
+		for(int i = 0; i < 20; i++) {
+		inimigo[i].fire();
+		}
+		return true;
 	}
 
 
@@ -323,19 +338,6 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	
 	
-
-
-
-
-
-	/*@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		int mouseX = screenX;
-	    int mouseY = screenY;
-	    float rot = MathUtils.radiansToDegrees * MathUtils.atan2((mouseY - jogador.getX()) /ExGame.PPM, (mouseX - jogador.getY()) /ExGame.PPM);
-	    System.out.println("oxe");
-	    jogador.setRotation(rot);
-		return true;
-	}*/
+	
 
 }

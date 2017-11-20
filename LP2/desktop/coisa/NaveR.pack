@@ -1,0 +1,19 @@
+
+NaveR.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Rapier
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Tiro Vermelho - Singular
+  rotate: false
+  xy: 35, 3
+  size: 19, 30
+  orig: 19, 30
+  offset: 0, 0
+  index: -1
