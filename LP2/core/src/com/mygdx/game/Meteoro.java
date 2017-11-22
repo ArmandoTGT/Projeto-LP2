@@ -7,17 +7,18 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Meteoro extends ObjetoInterativo{
-	public Meteoro(World mundo, TiledMap mapa, Rectangle bounds) {
-		super(mundo, mapa, bounds);
+	public Meteoro(PlayScreen screen, Rectangle bounds) {
+		super(screen, bounds);
 		fixture.setUserData(this);
 		setCategoryFilter(ExGame.METEORO_BIT);
 	}
 
 	@Override
 	public void batida() {
-		Gdx.app.log("Bateu ", "");	
+		//Gdx.app.log("Bateu ", "");	
 		//setCategoryFilter(ExGame.DESTROYED_BIT);
 		//getCell().setTile(null);
+		Hud.addScore(20);
 	}
 
 	

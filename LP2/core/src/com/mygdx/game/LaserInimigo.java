@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.Array;
 public class LaserInimigo extends Sprite {
 
     PlayScreen screen;
-    World world;
-    Array<TextureRegion> frames;  
+    World mundo;
+    
     float stateTime;
     boolean destroyed;
     boolean setToDestroy;
@@ -31,9 +31,7 @@ public class LaserInimigo extends Sprite {
     	this.angulo =  (int)angulo;
         
         this.screen = screen;
-        this.world = screen.mundo;
-        frames = new Array<TextureRegion>();   
-        
+        this.mundo = screen.mundo;
         
         setBounds(x, y, 6 / ExGame.PPM, 6 /ExGame.PPM);
         defineFireBall();
@@ -58,11 +56,11 @@ public class LaserInimigo extends Sprite {
         bdef.position.set(getX(), getY());
         }
         bdef.type = BodyDef.BodyType.DynamicBody;
-        if(!world.isLocked())
-         b2body = world.createBody(bdef);
+        if(!mundo.isLocked())
+         b2body = mundo.createBody(bdef);
 
         setOriginCenter();    
-        setRotation((PlayScreen.inimigo[1].corpo.getAngle() * MathUtils.radiansToDegrees) - 90);
+        //setRotation((PlayScreen.inimigo[1].corpo.getAngle() * MathUtils.radiansToDegrees) - 90);
         
         
         FixtureDef fdef = new FixtureDef();
@@ -205,7 +203,7 @@ public class LaserInimigo extends Sprite {
 
         
         if((stateTime > 3 || setToDestroy) && !destroyed) {
-            world.destroyBody(b2body);
+            mundo.destroyBody(b2body);
             
             destroyed = true;
         }
@@ -213,6 +211,10 @@ public class LaserInimigo extends Sprite {
             b2body.setLinearVelocity(b2body.getLinearVelocity().x, 2f);
         
     }
+    
+    public void some() {
+    	mundo.destroyBody(b2body);;
+    	}
 
     public void setToDestroy(){
         setToDestroy = true;
@@ -221,6 +223,7 @@ public class LaserInimigo extends Sprite {
     public boolean isDestroyed(){
         return destroyed;
     }
-
+    
+   
 
 }

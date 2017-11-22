@@ -17,9 +17,8 @@ import com.badlogic.gdx.utils.Array;
 public class LaserPlayer extends Sprite {
 
     PlayScreen screen;
-    World world;
-    Array<TextureRegion> frames;
-    Animation fireAnimation;
+    World world;    
+    
     float stateTime;
     boolean destroyed;
     boolean setToDestroy;
@@ -32,8 +31,7 @@ public class LaserPlayer extends Sprite {
     	this.angulo =  (int)angulo;
         
         this.screen = screen;
-        this.world = screen.mundo;
-        frames = new Array<TextureRegion>();   
+        this.world = screen.mundo;  
         
         
         setBounds(x, y, 6 / ExGame.PPM, 6 /ExGame.PPM);
@@ -71,7 +69,7 @@ public class LaserPlayer extends Sprite {
         shape.setRadius(3 / ExGame.PPM);      
         
         fdef.filter.categoryBits = ExGame.PLAYERLASER_BIT;
-		fdef.filter.maskBits = ExGame.DEFAULT_BIT | ExGame.INIMIGOLASER_BIT | ExGame.INIMIGO_BIT | ExGame.PLAYER_BIT ;
+		fdef.filter.maskBits = ExGame.DEFAULT_BIT | ExGame.INIMIGOLASER_BIT | ExGame.INIMIGO_BIT ;
 
         fdef.shape = shape;
         fdef.restitution = 1;
@@ -214,6 +212,8 @@ public class LaserPlayer extends Sprite {
             b2body.setLinearVelocity(b2body.getLinearVelocity().x, 2f);
         
     }
+    
+    
 
     public void setToDestroy(){
         setToDestroy = true;

@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.text.Position;
 
@@ -49,6 +51,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private TmxMapLoader carregaMapa;
 	private TiledMap mapa;
 	private OrthogonalTiledMapRenderer renderMapa;
+	private Hud hud;
 	
 	public World mundo;
 	private Box2DDebugRenderer b2Render;
@@ -58,6 +61,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	
 	private TextureAtlas atlas;
 	private TextureAtlas atlasInimigo;
+	private TextureAtlas vaziu;
 	
 	
 	public int mouseX;
@@ -66,9 +70,17 @@ public class PlayScreen implements Screen, InputProcessor {
 	Vector2 d;
 	Vector2 a;
 
+	JogadorCliente jogadorCCorredor = new JogadorCliente();
+	InimigoCliente InimigoCorredor = new InimigoCliente();
+	InimigoOnline corredor = new InimigoOnline();
+	ExecutorService piscina = Executors.newFixedThreadPool(3);
+	boolean Correr = true;
+	
 	public PlayScreen(ExGame game) {	
 		
 		
+		
+		hud = new Hud(game.balde);
 		this.game = game;		
 		camera = new OrthographicCamera();
 		port = new FitViewport(ExGame.V_LARG / ExGame.PPM, ExGame.V_ALT / ExGame.PPM, camera);	
@@ -77,30 +89,30 @@ public class PlayScreen implements Screen, InputProcessor {
 		mapa = carregaMapa.load("coisa/Mapa.tmx");
 		atlas = new TextureAtlas("coisa/NaveR.pack");
 		atlasInimigo = new TextureAtlas("coisa/NaveC.pack");
+		vaziu = new TextureAtlas("coisa/void.pack");
 		renderMapa = new OrthogonalTiledMapRenderer(mapa, 1 / ExGame.PPM);
 		camera.position.set(port.getWorldWidth() /2, port.getWorldHeight() /2, 0);
 		
 		mundo = new World(new Vector2(0, 0), true);
-		b2Render = new Box2DDebugRenderer();
+		b2Render = new Box2DDebugRenderer(false,false,false,false,false,false); //Criar o mundo e parar de desenhas as linhas do box2D
 		inimigo = new NaveInimiga[20];
 		for(int i = 0; i < 20; i++){
-		inimigo[i] = new NaveInimiga(mundo, this, camera);
+		inimigo[i] = new NaveInimiga(this, i);
 		inimigo[i].outrometodo();
 		}
-		jogador = new NavePlayer(mundo, this, camera);
+		jogador = new NavePlayer(this);
 		
 		
 		
-		new B2CriaMundo(mundo, mapa);
+		new B2CriaMundo(this);
 		
 		//Pixmap pm = new Pixmap(Gdx.files.internal("coisa/cursor.png"));
 		
 		//Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth(), pm.getHeight()));
 		Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Crosshair);		
 		Gdx.input.setInputProcessor(this);
-		
-		
-	}
+		piscina.submit(InimigoCorredor);
+		}
 	
 	
 	
@@ -128,6 +140,7 @@ public class PlayScreen implements Screen, InputProcessor {
 			jogador.corpo.applyForce(-1f, 0, 0, 0, true);
 		}
 		
+		
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			camera.zoom += 0.02;
 			//if(camera.zoom > 1.8999991)camera.zoom = (float) 1.8999991;
@@ -150,9 +163,15 @@ public class PlayScreen implements Screen, InputProcessor {
 		camera.position.y = jogador.corpo.getPosition().y;
 		
 		jogador.update(dt);
+		
 		for(int i = 0; i < 20; i++) {
+			try{
 		inimigo[i].update(dt);
-		}		
+			}catch(Exception f) {
+				
+			}
+		}
+		
 		camera.update();		
 		
 		
@@ -172,8 +191,18 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 	}
 	
+	public TextureAtlas getVoid(){
+		return vaziu;
+		
+		
+	}
+	
 	public void show() {		
 		
+	}
+	public void morte(int morto) {
+		inimigo[morto] = null;
+		System.out.println(morto);
 	}
 
 	
@@ -185,7 +214,10 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		
 		renderMapa.render();
-		
+		if(Correr){
+			Correr = false;
+			piscina.submit(jogadorCCorredor);
+		}
 		mundo.setContactListener(new listaColisao());
 		
 		b2Render.render(mundo, camera.combined);
@@ -193,20 +225,43 @@ public class PlayScreen implements Screen, InputProcessor {
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
 		jogador.draw(game.balde);
+		
 		for(int i = 0; i < 20; i++) {
+			try{
 		inimigo[i].draw(game.balde);
+			}catch(Exception e){
+				
+			}
 		}
+		//if(JogadorCliente.i != nClientes){
+		//	System.out.println("Entrou no if");
+		//	corredor.run(nClientes);
+		//}
 		game.balde.end();
+		
+		game.balde.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
 		
 			
 		
 			}
+	private static int nClientes;
+	
+	public static void setnClientes(int clientes){
+		nClientes = clientes;
+	}
 
 	
 	public void resize(int width, int height) {
 		port.update(width, height);
 	}
 
+	public TiledMap getMap() {
+		return mapa;
+		}
+	public World getWorld() {
+		return mundo;
+	}
 	
 	public void pause() {
 		
@@ -227,6 +282,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		mapa.dispose();
 		renderMapa.dispose();
 		mundo.dispose();
+		hud.dispose();
 			
 	}
 
@@ -271,9 +327,16 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		jogador.fire();
+		
 		for(int i = 0; i < 20; i++) {
+			try {
 		inimigo[i].fire();
+		System.out.println("atirou" + i);
+			}catch(Exception g) {
+				
+			}
 		}
+		
 		return true;
 	}
 

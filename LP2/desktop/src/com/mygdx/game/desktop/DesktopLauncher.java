@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		cfg.title = "LP2 Game";
 		cfg.width = 1280;
 		cfg.height = 720;
-		cfg.useGL30 = true;
+		cfg.useGL30 = false;
 		cfg.resizable = true;
 		cfg.foregroundFPS = 60;
 		

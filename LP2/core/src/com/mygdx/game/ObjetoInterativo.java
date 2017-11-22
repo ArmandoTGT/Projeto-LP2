@@ -20,9 +20,9 @@ public abstract class ObjetoInterativo {
 	protected Body corpo;
 	protected Fixture fixture;
 	
-	public ObjetoInterativo(World mundo, TiledMap mapa, Rectangle bounds) {
-		this.mundo = mundo;
-		this.mapa = mapa;
+	public ObjetoInterativo(PlayScreen screen, Rectangle bounds) {
+		this.mundo = screen.getWorld();
+		this.mapa = screen.getMap();
 		this.bounds = bounds;
 		
 		BodyDef corpoDef = new BodyDef();

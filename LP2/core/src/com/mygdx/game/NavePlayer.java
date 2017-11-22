@@ -31,10 +31,10 @@ public class NavePlayer extends Sprite {
 	protected Fixture fixture;
 	private Array<LaserPlayer> fireballs;
 	
-	public NavePlayer(World mundo, PlayScreen screen, OrthographicCamera camera) {
+	public NavePlayer(PlayScreen screen) {
 		super(screen.getAtlas().findRegion("Rapier"));
-		this.mundo = mundo;
-		this.camera = camera;
+		this.mundo = screen.getWorld();
+		
 		this.screen = screen;
 		pos = new Vector3();
 		defineNavePlayer();
@@ -74,12 +74,11 @@ public class NavePlayer extends Sprite {
 		shape.setRadius(9 / ExGame.PPM);
 		fdef.filter.categoryBits = ExGame.PLAYER_BIT;
 		fdef.filter.maskBits = ExGame.DEFAULT_BIT | ExGame.METEORO_BIT |
-				ExGame.INIMIGOLASER_BIT | ExGame.INIMIGO_BIT | ExGame.PLAYERLASER_BIT;
+				ExGame.INIMIGOLASER_BIT | ExGame.INIMIGO_BIT ;
 		
 		fdef.shape = shape;
 		//fdef.isSensor = true;
-		corpo.createFixture(fdef).setUserData("shape");;
-	
+		corpo.createFixture(fdef).setUserData(this);	
 	}
 	
 	public void fire(){

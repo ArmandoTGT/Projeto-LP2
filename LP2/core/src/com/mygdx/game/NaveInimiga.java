@@ -21,31 +21,62 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class NaveInimiga extends Sprite {
+	public int hp;
 	public World mundo;
 	public Body corpo;
 	private TextureRegion stand;
 	private OrthographicCamera camera;
 	private Vector3 pos;
 	private PlayScreen screen;
+	private boolean setToDestroy;
+	private boolean destroyed;
+	private float stateTime;
+	private int index;
 	
 	private Array<LaserInimigo> fireballs;
 	
-	public NaveInimiga(World mundo, PlayScreen screen, OrthographicCamera camera) {
+	public NaveInimiga(PlayScreen screen, int index) {
 		super(screen.getAtlasInimigo().findRegion("Crawler"));
-		this.mundo = mundo;
-		this.camera = camera;
+		this.mundo = screen.getWorld();
+		hp = 100;
 		this.screen = screen;
+		this.index = index;
 		pos = new Vector3();
 		defineNaveInimiga();
+		
 		
 		stand = new TextureRegion(getTexture(), 0, 0, 32, 32);
 		setBounds(0, 0, 32 / ExGame.PPM, 32 / ExGame.PPM);
 		setRegion(stand);
 		
+		setToDestroy = false;
+        destroyed = false;
+		
 		fireballs = new Array<LaserInimigo>();
 	}
 	
 	public void update(float dt) {
+		stateTime += dt;
+		if(setToDestroy && !destroyed){			
+          mundo.destroyBody(corpo);
+         
+         System.out.println("tamanho :" + fireballs.size);
+         for(int i = 0; i < fireballs.size; i ++) {
+        	 fireballs.get(i).some();
+      
+        System.out.println(i);
+         }
+          
+          fireballs = null;
+           // setRegion(new TextureRegion(screen.getVoid().findRegion("void"), 0, 0, 32, 32));
+           
+           screen.morte(index);
+           
+        		
+           // destroyed = true;            
+           // stateTime = 0;
+        } else if(!destroyed) {
+		
 		setPosition(corpo.getPosition().x - getWidth() /2 , corpo.getPosition().y - getHeight() /2 );
 		
 		  setOriginCenter();
@@ -56,7 +87,7 @@ public class NaveInimiga extends Sprite {
 	            if(ball.isDestroyed())
 	                fireballs.removeValue(ball, true);
 	        }
-		  
+        }
 		  //System.out.println( this.getRotation());
 		  
 	
@@ -82,13 +113,20 @@ public class NaveInimiga extends Sprite {
 		fdef.filter.maskBits = ExGame.DEFAULT_BIT | ExGame.METEORO_BIT |
 				ExGame.PLAYERLASER_BIT | ExGame.PLAYER_BIT | ExGame.INIMIGOLASER_BIT;
 		
+		
 		fdef.shape = shape;
-		corpo.createFixture(fdef);
+		corpo.createFixture(fdef).setUserData(this);;
 	}
 	
 	public void fire(){
         fireballs.add(new LaserInimigo(screen, corpo.getPosition().x, corpo.getPosition().y,  this.getRotation()));
     }
+	
+	public void levaDano() {
+		hp -= 50;
+		if(hp == 0)
+			setToDestroy = true;
+	}
 
     public void draw(Batch batch){
         super.draw(batch);
