@@ -53,7 +53,7 @@ public class PlayScreen implements Screen, InputProcessor {
 	private OrthogonalTiledMapRenderer renderMapa;
 	private Hud hud;
 	
-	public World mundo;
+	public static World mundo;
 	private Box2DDebugRenderer b2Render;
 	
 	static public NavePlayer jogador;
@@ -62,29 +62,42 @@ public class PlayScreen implements Screen, InputProcessor {
 	private TextureAtlas atlas;
 	private TextureAtlas atlasInimigo;
 	private TextureAtlas vaziu;
-	
+	static float x[];
+
+	static float y[];
+	static int pos[];
+	static float ang[];
+	static int inimigos;
 	
 	public int mouseX;
 	public int mouseY;
+	public static String mandouTiro;
+	public static String recebeuTiro[];
 	
 	Vector2 d;
 	Vector2 a;
 
 	JogadorCliente jogadorCCorredor = new JogadorCliente();
-	InimigoCliente InimigoCorredor = new InimigoCliente();
-	InimigoOnline corredor = new InimigoOnline();
+	
+	
 	ExecutorService piscina = Executors.newFixedThreadPool(3);
 	boolean Correr = true;
 	
 	public PlayScreen(ExGame game) {	
-		
-		
+		x = new float[19];
+		pos = new int[19];
+		y = new float[19];
+		ang = new float[19];
 		
 		hud = new Hud(game.balde);
 		this.game = game;		
 		camera = new OrthographicCamera();
 		port = new FitViewport(ExGame.V_LARG / ExGame.PPM, ExGame.V_ALT / ExGame.PPM, camera);	
-		
+		mandouTiro = "nãoatirou";
+		recebeuTiro = new String[19];
+		for(int i = 0; i < 19; i++) {
+		recebeuTiro[i] = "nãoatirou";
+		}
 		carregaMapa = new TmxMapLoader();
 		mapa = carregaMapa.load("coisa/Mapa.tmx");
 		atlas = new TextureAtlas("coisa/NaveR.pack");
@@ -111,7 +124,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		//Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, pm.getWidth(), pm.getHeight()));
 		Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Crosshair);		
 		Gdx.input.setInputProcessor(this);
-		piscina.submit(InimigoCorredor);
+		
 		}
 	
 	
@@ -216,6 +229,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		renderMapa.render();
 		if(Correr){
 			Correr = false;
+			
 			piscina.submit(jogadorCCorredor);
 		}
 		mundo.setContactListener(new listaColisao());
@@ -233,24 +247,172 @@ public class PlayScreen implements Screen, InputProcessor {
 				
 			}
 		}
-		//if(JogadorCliente.i != nClientes){
-		//	System.out.println("Entrou no if");
-		//	corredor.run(nClientes);
-		//}
-		game.balde.end();
 		
+		if(inimigo[0] != null)transforma0(pos[0], x[0], y[0], ang[0], recebeuTiro[0]);
+		//System.out.println("inimigo 3: " + inimigo[3].corpo.getPosition().x + " " + inimigo[3].corpo.getPosition().y + " " );
+		if(inimigo[1] != null)transforma1(pos[1], x[1], y[1], ang[1], recebeuTiro[1]);
+		//System.out.println("inimigo 4: " + inimigo[4].corpo.getPosition().x + " " + inimigo[4].corpo.getPosition().y + " " );
+		if(inimigo[2] != null)transforma2(pos[2], x[2], y[2], ang[2], recebeuTiro[2]);
+		if(inimigo[3] != null)transforma3(pos[3], x[3], y[3], ang[4], recebeuTiro[3]);
+		if(inimigo[4] != null)transforma4(pos[4], x[4], y[4], ang[4], recebeuTiro[4]);
+		if(inimigo[5] != null)transforma5(pos[5], x[5], y[5], ang[5], recebeuTiro[5]);
+		if(inimigo[6] != null)transforma6(pos[6], x[6], y[6], ang[6], recebeuTiro[6]);
+		if(inimigo[7] != null)transforma7(pos[7], x[7], y[7], ang[7], recebeuTiro[7]);
+		if(inimigo[8] != null)transforma8(pos[8], x[8], y[8], ang[8], recebeuTiro[8]);
+		if(inimigo[9] != null)transforma9(pos[9], x[9], y[9], ang[9], recebeuTiro[9]);
+		//System.out.println("inimigo 2: " + inimigo[2].corpo.getPosition().x + " " + inimigo[2].corpo.getPosition().y + " " );
+		
+		game.balde.end();
 		game.balde.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 		
-			
-		
+        
 			}
-	private static int nClientes;
 	
-	public static void setnClientes(int clientes){
-		nClientes = clientes;
+	public static void setInimigo0(int i, float posx, float posy, float angulo, String tiro){
+		x[0] = posx;
+		y[0] = posy;	
+		ang[0] = angulo;
+		pos[0] = i;
+		recebeuTiro[0] = tiro;
+		}
+	
+	public static void setInimigo1(int i, float posx, float posy, float angulo, String tiro){
+		x[1] = posx;
+		y[1] = posy;	
+		ang[1] = angulo;
+		pos[1] = i;
+		recebeuTiro[1] = tiro;
 	}
-
+	
+	public static void setInimigo2(int i, float posx, float posy, float angulo, String tiro){
+		x[2] = posx;
+		y[2] = posy;	
+		ang[2] = angulo;
+		pos[2] = i;
+		recebeuTiro[2] = tiro;
+}
+	public static void setInimigo3(int i, float posx, float posy, float angulo, String tiro){
+		x[3] = posx;
+		y[3] = posy;	
+		ang[3] = angulo;
+		pos[3] = i;
+		recebeuTiro[3] = tiro;
+}
+	public static void setInimigo4(int i, float posx, float posy, float angulo, String tiro){
+		x[4] = posx;
+		y[4] = posy;	
+		ang[4] = angulo;
+		pos[4] = i;
+		recebeuTiro[4] = tiro;
+}
+	public static void setInimigo5(int i, float posx, float posy, float angulo, String tiro){
+		x[5] = posx;
+		y[5] = posy;	
+		ang[5] = angulo;
+		pos[5] = i;
+		recebeuTiro[5] = tiro;
+}
+	public static void setInimigo6(int i, float posx, float posy, float angulo, String tiro){
+		x[6] = posx;
+		y[6] = posy;	
+		ang[6] = angulo;
+		pos[6] = i;
+		recebeuTiro[6] = tiro;
+}
+	public static void setInimigo7(int i, float posx, float posy, float angulo, String tiro){
+		x[7] = posx;
+		y[7] = posy;	
+		ang[7] = angulo;
+		pos[7] = i;
+		recebeuTiro[7] = tiro;
+}
+	public static void setInimigo8(int i, float posx, float posy, float angulo, String tiro){
+		x[8] = posx;
+		y[8] = posy;	
+		ang[8] = angulo;
+		pos[8] = i;
+		recebeuTiro[8] = tiro;
+}
+	public static void setInimigo9(int i, float posx, float posy, float angulo, String tiro){
+		x[9] = posx;
+		y[9] = posy;	
+		ang[9] = angulo;
+		pos[9] = i;
+		recebeuTiro[9] = tiro;
+}
+		
+	
+	public void transforma0(int i, float x, float y, float angulo, String tiro){
+		inimigo[0].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[0].fire();
+		}
+	}
+	
+	public void transforma1(int i, float x, float y, float angulo, String tiro){
+		inimigo[1].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[1].fire();
+		}
+				
+	}
+	public void transforma2(int i, float x, float y, float angulo, String tiro){
+		inimigo[2].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[2].fire();
+		}
+		
+	}
+	public void transforma3(int i, float x, float y, float angulo, String tiro){
+		inimigo[3].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[3].fire();
+		}
+		
+	}
+	public void transforma4(int i, float x, float y, float angulo, String tiro){
+		inimigo[4].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[4].fire();
+		}
+		
+	}
+	public void transforma5(int i, float x, float y, float angulo, String tiro){
+		inimigo[5].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[5].fire();
+		}
+		
+	}
+	public void transforma6(int i, float x, float y, float angulo, String tiro){
+		inimigo[6].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[6].fire();
+		}
+		
+	}
+	public void transforma7(int i, float x, float y, float angulo, String tiro){
+		inimigo[7].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[7].fire();
+		}
+		
+	}
+	public void transforma8(int i, float x, float y, float angulo, String tiro){
+		inimigo[8].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[8].fire();
+		}
+		
+	}
+	public void transforma9(int i, float x, float y, float angulo, String tiro){
+		inimigo[9].corpo.setTransform(new Vector2(x,y), angulo);
+		if(tiro.equals("atirou")) {
+			inimigo[9].fire();
+		}
+		
+	}
 	
 	public void resize(int width, int height) {
 		port.update(width, height);
@@ -261,7 +423,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		}
 	public World getWorld() {
 		return mundo;
-	}
+		}
 	
 	public void pause() {
 		
@@ -327,16 +489,14 @@ public class PlayScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		jogador.fire();
-		
-		for(int i = 0; i < 20; i++) {
-			try {
-		inimigo[i].fire();
-		System.out.println("atirou" + i);
-			}catch(Exception g) {
-				
-			}
+		mandouTiro = "atirou";
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		
+		mandouTiro = "nãoatirou";
+						
 		return true;
 	}
 
@@ -394,7 +554,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

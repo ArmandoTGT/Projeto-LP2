@@ -4,12 +4,15 @@ import com.badlogic.gdx.math.Vector2;
 
 public class InimigoOnline extends Thread {
 
-	public void run(int i) {
-		System.out.println(i);
-		PlayScreen.inimigo[i].corpo.setTransform(
-				new Vector2( JogadorCliente.x - 0.50f, JogadorCliente.y - 0.50f), 
-				PlayScreen.jogador.corpo.getAngle());
-		
+	int inimigo;
+	
+	public InimigoOnline(int i) {		
+		inimigo = i;
 	}
+
+	public void run() {		
+		PlayScreen.inimigo[inimigo].corpo.setTransform(
+		new Vector2( PlayScreen.x[inimigo], PlayScreen.y[inimigo]), PlayScreen.ang[inimigo]); 
+				}
 
 }
