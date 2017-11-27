@@ -20,30 +20,83 @@ public class listaColisao implements ContactListener {
 
 		switch(cDef){
 			case ExGame.PLAYER_BIT | ExGame.METEORO_BIT:
-				if(fixA.getFilterData().categoryBits == ExGame.PLAYER_BIT)
+				if(fixA.getFilterData().categoryBits == ExGame.PLAYER_BIT) {
                     ((ObjetoInterativo) fixB.getUserData()).batida();//((NavePlayer) fixA.getUserData());
-                else
+                    ((NavePlayer) fixA.getUserData()).levaDano(50);
+                    
+				}
+                else {
                     ((ObjetoInterativo) fixA.getUserData()).batida();//((NavePlayer) fixB.getUserData());
+                    ((NavePlayer) fixB.getUserData()).levaDano(50);
+                }
                 break;
 			case ExGame.PLAYERLASER_BIT | ExGame.INIMIGO_BIT:
-				if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT)
-                    ((NaveInimiga) fixB.getUserData()).levaDano();//((NavePlayer) fixA.getUserData());
-                else
-                    ((NaveInimiga) fixA.getUserData()).levaDano();//((NavePlayer) fixB.getUserData());
+				if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT) {
+					((NaveInimiga) fixB.getUserData()).levaDano(50);//((NavePlayer) fixA.getUserData());
+					((LaserPlayer) fixA.getUserData()).addScore(100);
+					 ((LaserPlayer) fixA.getUserData()).setToDestroy();
+				}
+                else {
+                    ((NaveInimiga) fixA.getUserData()).levaDano(50);//((NavePlayer) fixB.getUserData());
+                    ((LaserPlayer) fixB.getUserData()).addScore(100);
+                    ((LaserPlayer) fixB.getUserData()).setToDestroy();
+                }
                 break;
+                
 			case ExGame.PLAYER_BIT | ExGame.INIMIGO_BIT:
-				System.out.println("BATEU MORAL");
-				//if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT)
-                 //   ((NaveInimiga) fixB.getUserData()).levaDano();//((NavePlayer) fixA.getUserData());
-              //  else
-                //    ((NaveInimiga) fixA.getUserData()).levaDano();//((NavePlayer) fixB.getUserData());
+				//System.out.println("BATEU MORAL");
+				if(fixA.getFilterData().categoryBits == ExGame.PLAYER_BIT) {
+					((NavePlayer) fixA.getUserData()).levaDano(5);
+                    ((NaveInimiga) fixB.getUserData()).levaDano(5);//((NavePlayer) fixA.getUserData());
+				}
+                else {
+                	((NavePlayer) fixB.getUserData()).levaDano(5);
+                    ((NaveInimiga) fixA.getUserData()).levaDano(5);//((NavePlayer) fixB.getUserData());
+                }
                 break;
-			case ExGame.PLAYER_BIT | ExGame.INIMIGOLASER_BIT:
-				System.out.println("LEVOU TIRO");
-				//if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT)
-                 //   ((NaveInimiga) fixB.getUserData()).levaDano();//((NavePlayer) fixA.getUserData());
-              //  else
-                //    ((NaveInimiga) fixA.getUserData()).levaDano();//((NavePlayer) fixB.getUserData());
+			case ExGame.INIMIGO_BIT | ExGame.INIMIGO_BIT:
+				//System.out.println("BATEU MORAL");	
+				
+					
+                    ((NaveInimiga) fixB.getUserData()).levaDano(5);//((NavePlayer) fixA.getUserData());                
+                    ((NaveInimiga) fixA.getUserData()).levaDano(5);//((NavePlayer) fixB.getUserData());
+				
+                break;
+			case ExGame.INIMIGO_BIT | ExGame.INIMIGOLASER_BIT:
+				if(fixA.getFilterData().categoryBits == ExGame.INIMIGO_BIT){	
+					if(((LaserInimigo) fixB.getUserData()).count == 1){						
+						((NaveInimiga) fixA.getUserData()).levaDano(50);//((NavePlayer) fixA.getUserData());
+						((LaserInimigo) fixB.getUserData()).setToDestroy();
+					}   
+						((LaserInimigo) fixB.getUserData()).count++;
+				}
+             	else{                	// checar o retorno                   
+                    if(((LaserInimigo) fixA.getUserData()).count == 1){                    	
+                    	((NaveInimiga) fixB.getUserData()).levaDano(50);
+                    	((LaserInimigo) fixA.getUserData()).setToDestroy();                 
+                    	}
+                    	((LaserInimigo) fixB.getUserData()).count++;
+                }
+                break;
+			case ExGame.PLAYER_BIT | ExGame.INIMIGOLASER_BIT:				
+				if(fixA.getFilterData().categoryBits == ExGame.INIMIGOLASER_BIT) {
+                    ((NavePlayer) fixB.getUserData()).levaDano(50);//((NavePlayer) fixA.getUserData());
+					((LaserInimigo) fixA.getUserData()).setToDestroy();
+				}
+				
+                else
+                    ((NavePlayer) fixA.getUserData()).levaDano(50);//((NavePlayer) fixB.getUserData());
+					((LaserInimigo) fixB.getUserData()).setToDestroy();
+                break;
+			case ExGame.PLAYERLASER_BIT | ExGame.INIMIGOLASER_BIT:				
+				if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT) {
+                    ((LaserPlayer) fixA.getUserData()).setToDestroy();//((NavePlayer) fixA.getUserData());
+					((LaserInimigo) fixB.getUserData()).setToDestroy();
+				}
+                else {
+                    ((LaserPlayer) fixB.getUserData()).setToDestroy();//((NavePlayer) fixB.getUserData());
+                    ((LaserInimigo) fixA.getUserData()).setToDestroy();
+                }
                 break;
 		
 		

@@ -84,23 +84,23 @@ public class PlayScreen implements Screen, InputProcessor {
 	boolean Correr = true;
 	
 	public PlayScreen(ExGame game) {	
-		x = new float[19];
-		pos = new int[19];
-		y = new float[19];
-		ang = new float[19];
+		x = new float[10];
+		pos = new int[10];
+		y = new float[10];
+		ang = new float[10];
 		
 		hud = new Hud(game.balde);
 		this.game = game;		
 		camera = new OrthographicCamera();
 		port = new FitViewport(ExGame.V_LARG / ExGame.PPM, ExGame.V_ALT / ExGame.PPM, camera);	
 		mandouTiro = "nãoatirou";
-		recebeuTiro = new String[19];
-		for(int i = 0; i < 19; i++) {
+		recebeuTiro = new String[10];
+		for(int i = 0; i < 10; i++) {
 		recebeuTiro[i] = "nãoatirou";
 		}
 		carregaMapa = new TmxMapLoader();
 		mapa = carregaMapa.load("coisa/Mapa.tmx");
-		atlas = new TextureAtlas("coisa/NaveR.pack");
+		atlas = new TextureAtlas("coisa/NaveR.atlas");
 		atlasInimigo = new TextureAtlas("coisa/NaveC.pack");
 		vaziu = new TextureAtlas("coisa/void.pack");
 		renderMapa = new OrthogonalTiledMapRenderer(mapa, 1 / ExGame.PPM);
@@ -108,8 +108,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		mundo = new World(new Vector2(0, 0), true);
 		b2Render = new Box2DDebugRenderer(false,false,false,false,false,false); //Criar o mundo e parar de desenhas as linhas do box2D
-		inimigo = new NaveInimiga[20];
-		for(int i = 0; i < 20; i++){
+		
+		inimigo = new NaveInimiga[10];
+		for(int i = 0; i < 10; i++){
 		inimigo[i] = new NaveInimiga(this, i);
 		inimigo[i].outrometodo();
 		}
@@ -136,7 +137,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		
 					
-		
+		if(jogador != null){
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && jogador.corpo.getLinearVelocity().y <= 2){
 			jogador.corpo.applyForce(0, 1f, 0, 0, true);
 			
@@ -152,7 +153,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.A) && jogador.corpo.getLinearVelocity().x >= -2){
 			jogador.corpo.applyForce(-1f, 0, 0, 0, true);
 		}
-		
+		}
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
 			camera.zoom += 0.02;
@@ -172,12 +173,14 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		mundo.step(1/60f, 6, 2);
 		
-		camera.position.x = jogador.corpo.getPosition().x;
-		camera.position.y = jogador.corpo.getPosition().y;
+		if(jogador != null)camera.position.x = jogador.corpo.getPosition().x;
+		if(jogador != null)camera.position.y = jogador.corpo.getPosition().y;
+		//System.out.println(jogador.corpo.getPosition().x);
+		//System.out.println(jogador.corpo.getPosition().y);
 		
-		jogador.update(dt);
+		if(jogador != null)jogador.update(dt);
 		
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < 10; i++) {
 			try{
 		inimigo[i].update(dt);
 			}catch(Exception f) {
@@ -213,9 +216,14 @@ public class PlayScreen implements Screen, InputProcessor {
 	public void show() {		
 		
 	}
+	
+	public void mortePlayer() {
+		jogador = null;
+		game.setScreen(game.death);
+		this.pause();
+	}
 	public void morte(int morto) {
-		inimigo[morto] = null;
-		System.out.println(morto);
+		inimigo[morto] = null;		
 	}
 
 	
@@ -229,7 +237,6 @@ public class PlayScreen implements Screen, InputProcessor {
 		renderMapa.render();
 		if(Correr){
 			Correr = false;
-			
 			piscina.submit(jogadorCCorredor);
 		}
 		mundo.setContactListener(new listaColisao());
@@ -238,9 +245,9 @@ public class PlayScreen implements Screen, InputProcessor {
 		
 		game.balde.setProjectionMatrix(camera.combined);
 		game.balde.begin();
-		jogador.draw(game.balde);
+		if(jogador != null)jogador.draw(game.balde);
 		
-		for(int i = 0; i < 20; i++) {
+		for(int i = 0; i < 10; i++) {
 			try{
 		inimigo[i].draw(game.balde);
 			}catch(Exception e){
@@ -253,7 +260,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		if(inimigo[1] != null)transforma1(pos[1], x[1], y[1], ang[1], recebeuTiro[1]);
 		//System.out.println("inimigo 4: " + inimigo[4].corpo.getPosition().x + " " + inimigo[4].corpo.getPosition().y + " " );
 		if(inimigo[2] != null)transforma2(pos[2], x[2], y[2], ang[2], recebeuTiro[2]);
-		if(inimigo[3] != null)transforma3(pos[3], x[3], y[3], ang[4], recebeuTiro[3]);
+		if(inimigo[3] != null)transforma3(pos[3], x[3], y[3], ang[3], recebeuTiro[3]);
 		if(inimigo[4] != null)transforma4(pos[4], x[4], y[4], ang[4], recebeuTiro[4]);
 		if(inimigo[5] != null)transforma5(pos[5], x[5], y[5], ang[5], recebeuTiro[5]);
 		if(inimigo[6] != null)transforma6(pos[6], x[6], y[6], ang[6], recebeuTiro[6]);
@@ -488,7 +495,8 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		jogador.fire();
+		if(jogador != null)jogador.fire();
+		//inimigo[10].fire();
 		mandouTiro = "atirou";
 		try {
 			Thread.sleep(20);
@@ -529,7 +537,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-			
+		if(jogador != null) {
 			mouseX = screenX;
 			mouseY = screenY;
 		  Vector3 sp3 = camera.unproject(new Vector3(screenX, screenY, 0));
@@ -543,7 +551,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		  // Now you can set the angle;
 		  jogador.corpo.setTransform(jogador.corpo.getPosition(), d.angleRad());
 		  
-		  		  
+		}
 		return true;
 	}
 

@@ -1,0 +1,26 @@
+
+RenascerImg.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+RenascerNormal
+  rotate: false
+  xy: 1, 249
+  size: 850, 122
+  orig: 850, 122
+  offset: 0, 0
+  index: -1
+RenascerPressionado
+  rotate: false
+  xy: 1, 125
+  size: 850, 122
+  orig: 850, 122
+  offset: 0, 0
+  index: -1
+RenascerSelecionado
+  rotate: false
+  xy: 1, 1
+  size: 850, 122
+  orig: 850, 122
+  offset: 0, 0
+  index: -1

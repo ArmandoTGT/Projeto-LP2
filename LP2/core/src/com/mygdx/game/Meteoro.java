@@ -17,8 +17,7 @@ public class Meteoro extends ObjetoInterativo{
 	public void batida() {
 		//Gdx.app.log("Bateu ", "");	
 		//setCategoryFilter(ExGame.DESTROYED_BIT);
-		//getCell().setTile(null);
-		Hud.addScore(20);
+		//getCell().setTile(null);		
 	}
 
 	

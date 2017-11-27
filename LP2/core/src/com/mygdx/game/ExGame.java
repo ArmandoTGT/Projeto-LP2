@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -24,17 +23,22 @@ public class ExGame extends Game {
 	
 	public SpriteBatch balde;
 	
+	public MorteScreen death;
+	public MenuScreen menu;
 	
-	
-
 	public void create () {
+		menu = new MenuScreen(this);
+		death = new MorteScreen(this);
 		balde = new SpriteBatch();
-		setScreen(new PlayScreen(this));
+		setScreen(death);
 		}
 
 	public void render () {
 		super.render();
 	}
 	
+	public void dispose() {
+		JogadorCliente.correndo = false;
+	}
 	
 }

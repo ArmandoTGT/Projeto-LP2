@@ -23,26 +23,23 @@ public class InformacoesServidor implements Runnable {
 	@Override
 	
 	public void run() {
+    boolean correndo = true;	
 	try{
 
 		DataInputStream entrada = new DataInputStream(atendente.getInputStream());
         //Saida de bit enviados pelo socket cliente
         DataOutputStream saida = new DataOutputStream(atendente.getOutputStream());
 		//Saida de bits enviados pelo socket servidor
-		while(true){
+		while(correndo){
 			String aux = "";
              mensagemRecebida = cliente + " " + entrada.readUTF() + " ";
-             /*
-              * Primeiro servidor recebe valor
-              * Segundo o cliente recebe o valor, e recebe quem ele é
-              */
              //Pacote está sendo mandado para a porta em que o inimigoCliente está esperando respostas
  			for(int i = 0; i < dados.getClientes(); i++){
- 	  			dados.setMensagem(cliente, mensagemRecebida);
+ 				//A gente setta a cada rodada do for para garantir que o aux vai ser colocada naquela
+ 	  			dados.setMensagem(cliente, mensagemRecebida); 
  				aux += dados.getMensagem(i);
  			}
-           // for(int i = 0; i < dados.getClientes(); i++){
-            //		if(dados.getMensagem(i).equals(mensagemRecebida)) continue;
+ 			
  			try {
 				sem.acquire();
  	            saida.writeUTF(String.valueOf(cliente));
@@ -54,13 +51,11 @@ public class InformacoesServidor implements Runnable {
 				e.printStackTrace();
 			}
  		}
-	} catch (SocketException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}		
+	} catch (Exception e) {
+		System.out.println("Conexão desfeita");
+		dados.removeCliente(cliente);
+		correndo = false;
+	} 
 	}
 
 }

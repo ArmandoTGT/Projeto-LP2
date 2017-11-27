@@ -33,18 +33,19 @@ public class NaveInimiga extends Sprite {
 	private float stateTime;
 	private int index;
 	
+	
 	private Array<LaserInimigo> fireballs;
 	
 	public NaveInimiga(PlayScreen screen, int index) {
-		super(screen.getAtlasInimigo().findRegion("Crawler"));
+		super(screen.getAtlasInimigo().findRegion("RapierInimigo"));
 		this.mundo = screen.getWorld();
-		hp = 100;
+		
 		this.screen = screen;
 		this.index = index;
 		pos = new Vector3();
 		defineNaveInimiga();
 		
-		
+		hp = 100;
 		stand = new TextureRegion(getTexture(), 0, 0, 32, 32);
 		setBounds(0, 0, 32 / ExGame.PPM, 32 / ExGame.PPM);
 		setRegion(stand);
@@ -58,22 +59,22 @@ public class NaveInimiga extends Sprite {
 	public void update(float dt) {
 		stateTime += dt;
 		if(setToDestroy && !destroyed){			
-          mundo.destroyBody(corpo);
+          //mundo.destroyBody(corpo);
          
-         System.out.println("tamanho :" + fireballs.size);
+		setToDestroy = false;
          for(int i = 0; i < fireballs.size; i ++) {
         	 fireballs.get(i).some();
       
         System.out.println(i);
          }
           
-          fireballs = null;
+         //fireballs = null;
            // setRegion(new TextureRegion(screen.getVoid().findRegion("void"), 0, 0, 32, 32));
            
-           screen.morte(index);
-           
+           //screen.morte(index);
+           //JogadorCliente.correndo = false;
         		
-           // destroyed = true;            
+            //destroyed = true;            
            // stateTime = 0;
         } else if(!destroyed) {
 		
@@ -111,7 +112,8 @@ public class NaveInimiga extends Sprite {
 		
 		fdef.filter.categoryBits = ExGame.INIMIGO_BIT;
 		fdef.filter.maskBits = ExGame.DEFAULT_BIT | ExGame.METEORO_BIT |
-				ExGame.PLAYERLASER_BIT | ExGame.PLAYER_BIT | ExGame.INIMIGOLASER_BIT;
+				ExGame.PLAYERLASER_BIT | ExGame.PLAYER_BIT | ExGame.INIMIGOLASER_BIT |
+				ExGame.INIMIGO_BIT;
 		
 		
 		fdef.shape = shape;
@@ -122,10 +124,24 @@ public class NaveInimiga extends Sprite {
         fireballs.add(new LaserInimigo(screen, corpo.getPosition().x, corpo.getPosition().y,  this.getRotation()));
     }
 	
-	public void levaDano() {
-		hp -= 50;
-		if(hp == 0)
+	
+	public boolean olhador() {
+		if(corpo.getPosition().x > 1.5 && corpo.getPosition().y > 1.5){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public void levaDano(int dano) {
+		//System.out.println("dano " + dano);
+		if(olhador()) {
+			System.out.println("Dano: " + dano);
+		hp -= dano;
+		if(hp <= 0)
 			setToDestroy = true;
+		}
 	}
 
     public void draw(Batch batch){

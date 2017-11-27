@@ -22,39 +22,40 @@ public class LaserInimigo extends Sprite {
     float stateTime;
     boolean destroyed;
     boolean setToDestroy;
+    public int count;
     
     int angulo;
 
     Body b2body;
     public LaserInimigo(PlayScreen screen, float x, float y, float angulo){
-    	super(screen.getAtlasInimigo().findRegion("Tiro Vermelho - Singular"));
+    	super(screen.getAtlasInimigo().findRegion("Tiro Vermelho"));
     	this.angulo =  (int)angulo;
         
         this.screen = screen;
         this.mundo = screen.mundo;
-        
+        count = 0;
         setBounds(x, y, 6 / ExGame.PPM, 6 /ExGame.PPM);
         defineFireBall();
     }
 
     public void defineFireBall(){
         BodyDef bdef = new BodyDef();
-        if(angulo >= 10 && angulo < 25) {
-        bdef.position.set(getX(), getY()+0.1f);
-        }else if(angulo >= 25 && angulo < 50){
-        	bdef.position.set(getX() -0.1f, getY()+0.1f);
-        } else if(angulo >= 50 && angulo < 90) {
-        	bdef.position.set(getX() -0.1f, getY());
-        } else if(angulo >= -200 && angulo < -180) {
-        	bdef.position.set(getX() , getY() -0.1f);
-        }else if(angulo >= -245 && angulo < -200) {
-        	bdef.position.set(getX()-0.1f , getY() -0.05f);
-        }else if(angulo >= -270 && angulo < -245) {
-        	bdef.position.set(getX()-0.1f , getY() );
-        }
-        else {
+      //  if(angulo >= 10 && angulo < 25) {
+      //  bdef.position.set(getX(), getY()+0.1f);
+       // }else if(angulo >= 25 && angulo < 50){
+        //	bdef.position.set(getX() -0.1f, getY()+0.1f);
+       // } else if(angulo >= 50 && angulo < 90) {
+       // 	bdef.position.set(getX() -0.1f, getY());
+      //  } else if(angulo >= -200 && angulo < -180) {
+        //	bdef.position.set(getX() , getY() -0.1f);
+        //}else if(angulo >= -245 && angulo < -200) {
+        //	bdef.position.set(getX()-0.1f , getY() -0.05f);
+       // }else if(angulo >= -270 && angulo < -245) {
+        //	bdef.position.set(getX()-0.1f , getY() );
+       // }
+       // else {
         bdef.position.set(getX(), getY());
-        }
+       // }
         bdef.type = BodyDef.BodyType.DynamicBody;
         if(!mundo.isLocked())
          b2body = mundo.createBody(bdef);
@@ -75,9 +76,11 @@ public class LaserInimigo extends Sprite {
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
         
-        
+        float x = Float.parseFloat( String.valueOf( 3*Math.cos((Math.PI/180)*(angulo+90) ) ) );
+    	float y = Float.parseFloat( String.valueOf( 3*Math.sin((Math.PI/180)*(angulo+90) ) ) );
+    	b2body.setLinearVelocity(new Vector2( x, y));
        
-        if(angulo >= -270 && angulo < -265) {
+       /* if(angulo >= -270 && angulo < -265) {
         	b2body.setLinearVelocity(new Vector2( -3f, -0f));
         	}        
         if(angulo >= -265 && angulo < -255) {
@@ -188,7 +191,7 @@ public class LaserInimigo extends Sprite {
         if(angulo >= 85 && angulo <= 90) {
         	b2body.setLinearVelocity(new Vector2( -3f, 0f));
         	}
-        			
+        			*/
         
       
     }
@@ -200,7 +203,13 @@ public class LaserInimigo extends Sprite {
        
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         
-
+        if(setToDestroy && !destroyed) {
+            mundo.destroyBody(b2body);
+            
+            
+            
+            destroyed = true;
+        }
         
         if((stateTime > 3 || setToDestroy) && !destroyed) {
             mundo.destroyBody(b2body);
@@ -216,8 +225,10 @@ public class LaserInimigo extends Sprite {
     	mundo.destroyBody(b2body);;
     	}
 
-    public void setToDestroy(){
+    public void setToDestroy(){    //	if(stateTime > 1)
+    	
         setToDestroy = true;
+            	    	
     }
 
     public boolean isDestroyed(){

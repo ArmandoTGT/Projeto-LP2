@@ -5,7 +5,6 @@ import java.net.*;
 import java.util.concurrent.*;
 
 public class ServidorJogador {
-	
 	public static void main(String[] args) {
 		System.out.println("Servidor inicializado");
 		
@@ -14,23 +13,18 @@ public class ServidorJogador {
 		try{
 		ServerSocket observadorJogador = new ServerSocket(20000);
 		while(true){
-				if(dados.getClientes() == 2) {
+			//ServerSocket mensageiroInimigo = new ServerSocket(30000);
+				System.out.println("Antes do atendente" + dados.getId() + "\n");
+				Socket atendenteJogador = observadorJogador.accept();				
+				//Criar uma outra sala
+				if(dados.getClientes() == 4) {
 					System.out.println("Buffer próxima sala");
 					dados = new buffer();
 				}
-				//ServerSocket mensageiroInimigo = new ServerSocket(30000);
-					Socket atendenteJogador = observadorJogador.accept();
-					piscina.submit(new InformacoesServidor(atendenteJogador, dados.getClientes(), dados));
 					System.out.println("Conversando com cliente");
-				
-					/*if(dados.getClientes() > 0) {
-						Socket distribuidorInimigo = mensageiroInimigo.accept();
-						piscina.submit(new InformacoesInimigo(distribuidorInimigo, dados.getClientes(), dados));
-						i++;
-						System.out.println("Quantidade atual de inimigos: " + i);
-					}*/
+					piscina.submit(new InformacoesServidor(atendenteJogador, dados.getId(), dados));
 					dados.addClientes();
-					System.out.println(dados.getClientes());
+					System.out.println("Depois do atendente" + dados.getId() + "\n");
 			}
 		}catch (SocketException e) {
 				// TODO Auto-generated catch block

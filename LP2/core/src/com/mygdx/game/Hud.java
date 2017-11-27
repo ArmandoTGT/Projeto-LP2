@@ -88,6 +88,18 @@ public class Hud implements Disposable{
         score += value;
         scoreLabel.setText(String.format("%06d", score));
     }
+    public static int getScore(){
+    	if(score != null) {
+       return score; 
+    	}
+    	else {
+    		return 0;
+    	}
+    }
+    public static void levaDano(int value){
+        hp -= value;
+        hpLabel.setText(String.format("%03d", hp));
+    }
 
     @Override
     public void dispose() { stage.dispose(); }

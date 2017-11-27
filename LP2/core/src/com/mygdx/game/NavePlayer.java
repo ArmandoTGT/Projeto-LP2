@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import java.util.Random;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 public class NavePlayer extends Sprite {
+	public int hp;
 	public World mundo;
 	public Body corpo;
 	private TextureRegion stand;
@@ -30,23 +32,56 @@ public class NavePlayer extends Sprite {
 	private PlayScreen screen;
 	protected Fixture fixture;
 	private Array<LaserPlayer> fireballs;
+	private boolean setToDestroy;
+	private boolean destroyed;
+	private float stateTime;	
+	private Random rand;
+	
 	
 	public NavePlayer(PlayScreen screen) {
-		super(screen.getAtlas().findRegion("Rapier"));
+		super(screen.getAtlas().findRegion("RapierAzul"));
 		this.mundo = screen.getWorld();
 		
 		this.screen = screen;
 		pos = new Vector3();
+		rand = new Random();
 		defineNavePlayer();
 		
+		hp = 100;
 		stand = new TextureRegion(getTexture(), 0, 0, 32, 32);
 		setBounds(0, 0, 32 / ExGame.PPM, 32 / ExGame.PPM);
 		setRegion(stand);
 		
+		setToDestroy = false;
+        destroyed = false;
+		
 		fireballs = new Array<LaserPlayer>();
+		
 	}
 	
-	public void update(float dt) {
+public void update(float dt) {
+		
+		
+		
+		// System.out.println((corpo.getAngle() * MathUtils.radiansToDegrees) - 90);
+		stateTime += dt;
+		if(setToDestroy && !destroyed){			
+          mundo.destroyBody(corpo);
+         
+         System.out.println("tamanho :" + fireballs.size);
+         for(int i = 0; i < fireballs.size; i ++) {
+        	 fireballs.get(i).some();
+         }
+          
+          fireballs = null;
+           // setRegion(new TextureRegion(screen.getVoid().findRegion("void"), 0, 0, 32, 32));
+          JogadorCliente.correndo = false;
+          screen.mortePlayer();
+           
+        		
+            destroyed = true;            
+           // stateTime = 0;
+        } else if(!destroyed) {
 		setPosition(corpo.getPosition().x - getWidth() /2 , corpo.getPosition().y - getHeight() /2 );
 		
 		  setOriginCenter();
@@ -57,6 +92,7 @@ public class NavePlayer extends Sprite {
 	            if(ball.isDestroyed())
 	                fireballs.removeValue(ball, true);
 	        }
+        }
 		  
 		  //System.out.println( this.getRotation());
 		  
@@ -65,7 +101,50 @@ public class NavePlayer extends Sprite {
 
 	private void defineNavePlayer() {
 		BodyDef corpoDef = new BodyDef();
-		corpoDef.position.set(2000 / ExGame.PPM, 2000 / ExGame.PPM);
+		
+		switch(rand.nextInt(9)) {
+		
+		case 0:
+			corpoDef.position.set(1000 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 1:
+			corpoDef.position.set(1100 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 2:
+			corpoDef.position.set(1200 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 3:
+			corpoDef.position.set(1300 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 4:
+			corpoDef.position.set(1400 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 5:
+			corpoDef.position.set(1500 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 6:
+			corpoDef.position.set(1600 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 7:
+			corpoDef.position.set(1700 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 8:
+			corpoDef.position.set(1800 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		case 9:
+			corpoDef.position.set(1900 / ExGame.PPM, 1000 / ExGame.PPM);
+			break;
+		
+		}
 		corpoDef.type = BodyType.DynamicBody;
 		corpo = mundo.createBody(corpoDef);
 		
@@ -85,16 +164,27 @@ public class NavePlayer extends Sprite {
         fireballs.add(new LaserPlayer(screen, corpo.getPosition().x, corpo.getPosition().y,  this.getRotation()));
     }
 
+	public void levaDano(int dano) {
+		hp -= dano;
+		Hud.levaDano(dano);
+		if(hp <= 0)
+			setToDestroy = true;
+	}
+	
     public void draw(Batch batch){
         super.draw(batch);
         try {
         for(LaserPlayer ball : fireballs)
             ball.draw(batch);
-        
         }
+        
         catch(Exception e){
         	
         }
     }
+
+	public void addScore(int i){
+		Hud.addScore(i);		
+	}
 
 }
