@@ -45,8 +45,7 @@ public class JogadorCliente implements Runnable {
 			        eu = entrada.readUTF();
 			        inimigos = entrada.readUTF();
 			        aux = entrada.readUTF();
-				sem.release();
-				
+				sem.release();				
 				filtroJogador = new FiltroJogador(eu, inimigos, aux);
 				filtroJogador.filtro();
 			}

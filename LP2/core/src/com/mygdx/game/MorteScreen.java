@@ -24,36 +24,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
-
-
 public class MorteScreen implements Screen{
 	
 	private ExGame game;
-	
-	
+		
     TextButtonStyle textButtonStyleSair;
     BitmapFont fontSair;
     Skin skinSair;
     TextureAtlas buttonAtlasSair;    
     
-
     TextButtonStyle textButtonStyleJogar;
     BitmapFont fontJogar;
     Skin skinJogar;
     TextureAtlas buttonAtlasJogar;
     
     static BitmapFont font;
-    
-    
+        
     private Texture fundo;
         
     public Stage stage;
     private Viewport port;
     private int score;
+    private SpriteBatch balde;
 	
     public MorteScreen(final ExGame game){
     	
+    	balde = new SpriteBatch();
     	this.game = game;
     	port = new FitViewport(1280, 720, new OrthographicCamera());
     	stage = new Stage(port);
@@ -67,8 +63,7 @@ public class MorteScreen implements Screen{
 		  font = generator.generateFont(parameter);	
 		  font.setColor(Color.valueOf("b7b7b7"));		  
 		  generator.dispose();
-		  
-    	
+		      	
 		//Begin Botão Jogar
 		 fontJogar = new BitmapFont();
 	     skinJogar = new Skin();
@@ -102,7 +97,7 @@ public class MorteScreen implements Screen{
 				MorteScreen.this.pause();
 			}		    	
 		     });
-	     buttonJogar.setPosition(150, 565);
+	     buttonJogar.setPosition(215, 163);
 		 stage.addActor(buttonJogar);
 		//end Botão Jogar
 		 
@@ -134,10 +129,9 @@ public class MorteScreen implements Screen{
 				Gdx.app.exit();
 			}		    	
 		     });
-	     buttonSair.setPosition(430, 115);
+	     buttonSair.setPosition(215, 50);
 		 stage.addActor(buttonSair);
-		//end Botão Sair
-		
+		//end Botão Sair		
 		
 	}
 	
@@ -145,49 +139,38 @@ public class MorteScreen implements Screen{
     	Gdx.input.setInputProcessor(stage);		
 	}
 
-	public void render(float delta) {
-		
-		
+	public void render(float delta) {		
 		score = Hud.getScore();
 	
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		game.balde.begin();
-		game.balde.draw(fundo, 0, 0);
-		font.draw(game.balde, "SCORE FINAL: " + String.valueOf(score), 500, 500); 
-		game.balde.end();		
+		balde.begin();
+		balde.draw(fundo, 0, 0);
+		font.draw(balde, "SCORE TOTAL: " + String.valueOf(score), 520, 500); 
+		balde.end();		
 		
-		
-		
-		//ddstage.act(delta);
-		stage.draw();
-		
+		stage.act(delta);
+		stage.draw();		
 	}
 	
 	public void resize(int width, int height) {
-		
-		
+				
 	}
 	
 	public void pause() {
-		
-		
+				
 	}
 	
 	public void resume() {
-		
-		
+				
 	}
 	
 	public void hide() {
-		
-		
+				
 	}
 	
 	public void dispose() {
 		
 	}
-	
-	
 }

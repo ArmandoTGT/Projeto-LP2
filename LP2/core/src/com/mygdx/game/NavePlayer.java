@@ -75,7 +75,7 @@ public void update(float dt) {
           
           fireballs = null;
            // setRegion(new TextureRegion(screen.getVoid().findRegion("void"), 0, 0, 32, 32));
-          JogadorCliente.correndo = false;
+          JogadorCliente.correndo = false;          
           screen.mortePlayer();
            
         		
@@ -162,6 +162,12 @@ public void update(float dt) {
 	
 	public void fire(){
         fireballs.add(new LaserPlayer(screen, corpo.getPosition().x, corpo.getPosition().y,  this.getRotation()));
+        try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	public void levaDano(int dano) {

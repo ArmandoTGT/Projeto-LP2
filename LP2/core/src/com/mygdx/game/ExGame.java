@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,17 +22,23 @@ public class ExGame extends Game {
 	public static final short INIMIGOLASER_BIT = 32;
 	public static final short DESTROYED_BIT = 64;
 	
+	public static AssetManager manager;
+
 	
 	public SpriteBatch balde;
 	
-	public MorteScreen death;
+	public static MorteScreen death;
 	public MenuScreen menu;
 	
 	public void create () {
 		menu = new MenuScreen(this);
 		death = new MorteScreen(this);
 		balde = new SpriteBatch();
-		setScreen(death);
+		manager = new AssetManager();
+		
+		manager.load("coisa/morreu.mp3", Sound.class);
+		manager.finishLoading();
+		setScreen(menu);
 		}
 
 	public void render () {

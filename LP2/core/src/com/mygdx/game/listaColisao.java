@@ -22,14 +22,25 @@ public class listaColisao implements ContactListener {
 			case ExGame.PLAYER_BIT | ExGame.METEORO_BIT:
 				if(fixA.getFilterData().categoryBits == ExGame.PLAYER_BIT) {
                     ((ObjetoInterativo) fixB.getUserData()).batida();//((NavePlayer) fixA.getUserData());
-                    ((NavePlayer) fixA.getUserData()).levaDano(50);
+                    ((NavePlayer) fixA.getUserData()).levaDano(5);
                     
 				}
                 else {
                     ((ObjetoInterativo) fixA.getUserData()).batida();//((NavePlayer) fixB.getUserData());
-                    ((NavePlayer) fixB.getUserData()).levaDano(50);
+                    ((NavePlayer) fixB.getUserData()).levaDano(5);
                 }
-                break;
+                break;        
+    		case ExGame.INIMIGO_BIT | ExGame.METEORO_BIT:
+    			if(fixA.getFilterData().categoryBits == ExGame.PLAYER_BIT) {
+                     ((ObjetoInterativo) fixB.getUserData()).batida();//((NavePlayer) fixA.getUserData());
+                     ((NaveInimiga) fixA.getUserData()).levaDano(5);
+                        
+    			}
+                 else {
+                     ((ObjetoInterativo) fixA.getUserData()).batida();//((NavePlayer) fixB.getUserData());
+                     ((NaveInimiga) fixB.getUserData()).levaDano(5);
+                }
+                    break;
 			case ExGame.PLAYERLASER_BIT | ExGame.INIMIGO_BIT:
 				if(fixA.getFilterData().categoryBits == ExGame.PLAYERLASER_BIT) {
 					((NaveInimiga) fixB.getUserData()).levaDano(50);//((NavePlayer) fixA.getUserData());
@@ -54,12 +65,18 @@ public class listaColisao implements ContactListener {
                     ((NaveInimiga) fixA.getUserData()).levaDano(5);//((NavePlayer) fixB.getUserData());
                 }
                 break;
-			case ExGame.INIMIGO_BIT | ExGame.INIMIGO_BIT:
-				//System.out.println("BATEU MORAL");	
+			case ExGame.INIMIGO_BIT | ExGame.INIMIGO_BIT:				
 				
 					
                     ((NaveInimiga) fixB.getUserData()).levaDano(5);//((NavePlayer) fixA.getUserData());                
                     ((NaveInimiga) fixA.getUserData()).levaDano(5);//((NavePlayer) fixB.getUserData());
+				
+                break;
+			case ExGame.INIMIGOLASER_BIT | ExGame.INIMIGOLASER_BIT:				
+				
+					
+                    ((LaserInimigo) fixB.getUserData()).setToDestroy();//((NavePlayer) fixA.getUserData());                
+                    ((LaserInimigo) fixA.getUserData()).setToDestroy();//((NavePlayer) fixB.getUserData());
 				
                 break;
 			case ExGame.INIMIGO_BIT | ExGame.INIMIGOLASER_BIT:

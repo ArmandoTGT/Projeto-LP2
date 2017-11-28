@@ -10,6 +10,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Cursor;
@@ -219,11 +220,12 @@ public class PlayScreen implements Screen, InputProcessor {
 	
 	public void mortePlayer() {
 		jogador = null;
-		game.setScreen(game.death);
+		game.setScreen(ExGame.death);
 		this.pause();
 	}
-	public void morte(int morto) {
-		inimigo[morto] = null;		
+	public void morte(){
+		ExGame.manager.get("coisa/morreu.mp3", Sound.class).play();
+		System.out.println("morreu");
 	}
 
 	
@@ -499,7 +501,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		//inimigo[10].fire();
 		mandouTiro = "atirou";
 		try {
-			Thread.sleep(20);
+			Thread.sleep(16);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

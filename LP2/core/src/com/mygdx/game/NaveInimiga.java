@@ -71,7 +71,7 @@ public class NaveInimiga extends Sprite {
          //fireballs = null;
            // setRegion(new TextureRegion(screen.getVoid().findRegion("void"), 0, 0, 32, 32));
            
-           //screen.morte(index);
+           screen.morte();
            //JogadorCliente.correndo = false;
         		
             //destroyed = true;            

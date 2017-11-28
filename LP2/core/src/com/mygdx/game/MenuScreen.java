@@ -2,13 +2,17 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -41,13 +45,25 @@ public class MenuScreen implements Screen{
         
     public Stage stage;
     private Viewport port;
+    
+    static BitmapFont font;
 	
     public MenuScreen(final ExGame game){
     	
     	this.game = game;
     	port = new FitViewport(1280, 720, new OrthographicCamera());
     	stage = new Stage(port);
-    	fundo = new Texture("coisa/FundoInicial.png");    	
+    	fundo = new Texture("coisa/FundoInicial.png"); 
+    	FileHandle caminho = new FileHandle("coisa/font.ttf");
+    	
+    	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
+		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		  parameter.size = 20 ;		  
+		  font = new BitmapFont();					 
+		  font = generator.generateFont(parameter);	
+		  font.setColor(Color.valueOf("b7b7b7"));		  
+		  generator.dispose();
+		      	
     	
 		 
 		//Begin Botão Jogar
@@ -120,6 +136,7 @@ public class MenuScreen implements Screen{
 		//end Botão Sair
 		
 		
+		 
 	}
 	
     public void show() {
@@ -134,6 +151,7 @@ public class MenuScreen implements Screen{
 		
 		game.balde.begin();
 		game.balde.draw(fundo, 0, 0);
+		font.draw(game.balde, "NOME DO JOGO", 520, 500); 
 		game.balde.end();		
 		
 		
