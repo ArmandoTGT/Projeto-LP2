@@ -123,7 +123,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		}
 		jogador = new NavePlayer(this);
 		
-		
+		camera.zoom = 1.5f;
 		
 		new B2CriaMundo(this);
 		

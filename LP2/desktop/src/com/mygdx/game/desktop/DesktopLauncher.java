@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		cfg.width = 1280;
 		cfg.height = 720;
 		cfg.useGL30 = false;
-		cfg.resizable = true;
+		cfg.resizable = false;
 		cfg.foregroundFPS = 60;
 		
 		new LwjglApplication(new ExGame(), cfg);
