@@ -62,44 +62,9 @@ public class MorteScreen implements Screen{
 		  font = new BitmapFont();					 
 		  font = generator.generateFont(parameter);	
 		  font.setColor(Color.valueOf("b7b7b7"));		  
-		  generator.dispose();
-		      	
-		//Begin Botão Jogar
-		 fontJogar = new BitmapFont();
-	     skinJogar = new Skin();
-	     buttonAtlasJogar = new TextureAtlas("coisa/RenascerImg.pack");
-	     skinJogar.addRegions(buttonAtlasJogar);
-	     textButtonStyleJogar = new TextButtonStyle();
-	     textButtonStyleJogar.font = fontJogar;
-	     textButtonStyleJogar.up = skinJogar.getDrawable("RenascerNormal");
-	     textButtonStyleJogar.down = skinJogar.getDrawable("RenascerPressionado");
-	     textButtonStyleJogar.checked = skinJogar.getDrawable("RenascerNormal");
-	     Button buttonJogar = new TextButton(" ", textButtonStyleJogar);
-	     buttonJogar.addListener(new ClickListener() {	    	 
-				@Override
-			public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-				textButtonStyleJogar.up = skinJogar.getDrawable("RenascerNormal");
-				super.exit(event, x, y, pointer, toActor);
-			}
-			@Override
-			public boolean mouseMoved(InputEvent event, float x, float y) {
-				textButtonStyleJogar.up = skinJogar.getDrawable("RenascerSelecionado");
-				return super.mouseMoved(event, x, y);
-			}
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				/*
-				 * Através desse método quando apertamos o botão,
-				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
-				 */			
-				game.setScreen(new PlayScreen(game));
-				MorteScreen.this.pause();
-			}		    	
-		     });
-	     buttonJogar.setPosition(215, 163);
-		 stage.addActor(buttonJogar);
-		//end Botão Jogar
+		  generator.dispose();		      	
+	
+	     
 		 
 		//Begin Botão Sair
 		 fontSair = new BitmapFont();

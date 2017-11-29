@@ -18,8 +18,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -64,11 +67,12 @@ public class PlayScreen implements Screen, InputProcessor {
 	private TextureAtlas atlasInimigo;
 	private TextureAtlas vaziu;
 	static float x[];
-
+	static float tempo;
 	static float y[];
 	static int pos[];
 	static float ang[];
 	static int inimigos;
+
 	
 	public int mouseX;
 	public int mouseY;
@@ -90,6 +94,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		y = new float[10];
 		ang = new float[10];
 		
+		tempo = 0;
 		hud = new Hud(game.balde);
 		this.game = game;		
 		camera = new OrthographicCamera();
@@ -100,6 +105,7 @@ public class PlayScreen implements Screen, InputProcessor {
 		recebeuTiro[i] = "nãoatirou";
 		}
 		carregaMapa = new TmxMapLoader();
+	
 		mapa = carregaMapa.load("coisa/Mapa.tmx");
 		atlas = new TextureAtlas("coisa/NaveR.atlas");
 		atlasInimigo = new TextureAtlas("coisa/NaveC.pack");
@@ -223,13 +229,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		game.setScreen(ExGame.death);
 		this.pause();
 	}
-	public void morte(){
-		ExGame.manager.get("coisa/morreu.mp3", Sound.class).play();
-		System.out.println("morreu");
-	}
+	
 
 	
 	public void render(float delta) {
+		tempo += delta;
 		update(delta, camera.position.x, camera.position.y);
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -270,6 +274,8 @@ public class PlayScreen implements Screen, InputProcessor {
 		if(inimigo[8] != null)transforma8(pos[8], x[8], y[8], ang[8], recebeuTiro[8]);
 		if(inimigo[9] != null)transforma9(pos[9], x[9], y[9], ang[9], recebeuTiro[9]);
 		//System.out.println("inimigo 2: " + inimigo[2].corpo.getPosition().x + " " + inimigo[2].corpo.getPosition().y + " " );
+		
+		
 		
 		game.balde.end();
 		game.balde.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -356,6 +362,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[0].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[0].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -363,6 +374,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[1].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[1].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 				
 	}
@@ -370,6 +386,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[2].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[2].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -377,6 +398,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[3].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[3].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -384,6 +410,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[4].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[4].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -391,6 +422,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[5].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[5].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -398,6 +434,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[6].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[6].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -405,6 +446,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[7].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[7].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -412,6 +458,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[8].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[8].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -419,6 +470,11 @@ public class PlayScreen implements Screen, InputProcessor {
 		inimigo[9].corpo.setTransform(new Vector2(x,y), angulo);
 		if(tiro.equals("atirou")) {
 			inimigo[9].fire();
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -506,6 +562,11 @@ public class PlayScreen implements Screen, InputProcessor {
 			e.printStackTrace();
 		}
 		mandouTiro = "nãoatirou";
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 						
 		return true;
 	}

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -46,7 +47,9 @@ public class MenuScreen implements Screen{
     public Stage stage;
     private Viewport port;
     
-    static BitmapFont font;
+    
+    //Musica Tela de Menu
+    public Music musicaMenu;
 	
     public MenuScreen(final ExGame game){
     	
@@ -56,14 +59,7 @@ public class MenuScreen implements Screen{
     	fundo = new Texture("coisa/FundoInicial.png"); 
     	FileHandle caminho = new FileHandle("coisa/font.ttf");
     	
-    	FreeTypeFontGenerator generator = new FreeTypeFontGenerator(caminho);
-		  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		  parameter.size = 20 ;		  
-		  font = new BitmapFont();					 
-		  font = generator.generateFont(parameter);	
-		  font.setColor(Color.valueOf("b7b7b7"));		  
-		  generator.dispose();
-		      	
+    	      	
     	
 		 
 		//Begin Botão Jogar
@@ -96,10 +92,12 @@ public class MenuScreen implements Screen{
 				 * vamos chamar uma nova tela, que nesse caso é a janela da fila
 				 */			
 				game.setScreen(new PlayScreen(game));
+				//Pausa o som do menu
+
 				MenuScreen.this.pause();
 			}		    	
 		     });
-	     buttonJogar.setPosition(215, 345);
+	     buttonJogar.setPosition(215, 260);
 		 stage.addActor(buttonJogar);
 		//end Botão Jogar
 		 
@@ -128,10 +126,12 @@ public class MenuScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				//Pausa o som do menu
+				musicaMenu.pause();
 				Gdx.app.exit();
 			}		    	
 		     });
-	     buttonSair.setPosition(215, 213);
+	     buttonSair.setPosition(215, 140);
 		 stage.addActor(buttonSair);
 		//end Botão Sair
 		
@@ -140,6 +140,8 @@ public class MenuScreen implements Screen{
 	}
 	
     public void show() {
+    	//Som do menu
+    
     	Gdx.input.setInputProcessor(stage);
 		
 	}
@@ -151,7 +153,7 @@ public class MenuScreen implements Screen{
 		
 		game.balde.begin();
 		game.balde.draw(fundo, 0, 0);
-		font.draw(game.balde, "NOME DO JOGO", 520, 500); 
+	
 		game.balde.end();		
 		
 		

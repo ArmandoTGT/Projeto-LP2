@@ -21,10 +21,7 @@ public class ExGame extends Game {
 	public static final short PLAYERLASER_BIT = 16;
 	public static final short INIMIGOLASER_BIT = 32;
 	public static final short DESTROYED_BIT = 64;
-	
-	public static AssetManager manager;
 
-	
 	public SpriteBatch balde;
 	
 	public static MorteScreen death;
@@ -34,10 +31,9 @@ public class ExGame extends Game {
 		menu = new MenuScreen(this);
 		death = new MorteScreen(this);
 		balde = new SpriteBatch();
-		manager = new AssetManager();
 		
-		manager.load("coisa/morreu.mp3", Sound.class);
-		manager.finishLoading();
+		
+		
 		setScreen(menu);
 		}
 
